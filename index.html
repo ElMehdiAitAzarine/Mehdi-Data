@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PolyTech Hub — Portail d'Examens & Formations Multidisciplinaires</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <script>
+    // Appliquer le thème dès le chargement du DOM pour éviter tout scintillement
+    (function () {
+      const savedTheme = localStorage.getItem('polytech_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <style>
+    /* MODE CLAIR (MINIMALISTE) */
+    :root {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --border: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+
+      --it-color: #0284c7;
+      --it-bg: #f0f9ff;
+      --it-border: #bae6fd;
+
+      --topo-color: #059669;
+      --topo-bg: #ecfdf5;
+      --topo-border: #a7f3d0;
+
+      --aqua-color: #0891b2;
+      --aqua-bg: #ecfeff;
+      --aqua-border: #a5f3fc;
+
+      --carto-color: #db2777;
+      --carto-bg: #fdf2f8;
+      --carto-border: #fbcfe8;
+
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --radius-sm: 6px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 6px 16px -2px rgba(0, 0, 0, 0.08);
+    }
+
+    /* MODE SOMBRE BLEU-TOKYO (TOKYO NIGHT DEEP BLUE) */
+    [data-theme="tokyo-dark"] {
+      --bg: #1a1b26;
+      --bg-surface: #24283b;
+      --border: #2f354a;
+      --border-hover: #414868;
+      --text-main: #c0caf5;
+      --text-muted: #9aa5ce;
+      --text-dim: #7aa2f7;
+      --primary: #7aa2f7;
+      --primary-hover: #89b4fa;
+      --primary-light: #1f2335;
+      --primary-border: #3d59a1;
+
+      --it-color: #7dcfff;
+      --it-bg: #1e2e3e;
+      --it-border: #2d4f7c;
+
+      --topo-color: #9ece6a;
+      --topo-bg: #1e2e28;
+      --topo-border: #2f543d;
+
+      --aqua-color: #2ac3de;
+      --aqua-bg: #192c38;
+      --aqua-border: #22576e;
+
+      --carto-color: #f7768e;
+      --carto-bg: #2d2030;
+      --carto-border: #5e2e45;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 20px -3px rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .brand-font {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-main);
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .navbar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+    }
+
+    .logo-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .logo-subtitle {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-pill {
+      padding: 5px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .nav-pill:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-hover);
+      color: var(--text-main);
+    }
+
+    /* THEME TOGGLE BUTTON */
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 999px;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* CONTROLS (SEARCH & FILTERS) */
+    .controls-container {
+      max-width: 1180px;
+      margin: 24px auto 16px;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .search-bar-wrap {
+      position: relative;
+      max-width: 580px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 16px 10px 38px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-main);
+      font-size: 13.5px;
+      outline: none;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .filter-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      padding: 5px 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-main);
+      border-color: var(--border-hover);
+      background: var(--bg);
+    }
+
+    .filter-btn.active {
+      background: var(--text-main);
+      color: var(--bg);
+      border-color: var(--text-main);
+    }
+
+    [data-theme="tokyo-dark"] .filter-btn.active {
+      background: #7aa2f7;
+      color: #1a1b26;
+      border-color: #7aa2f7;
+    }
+
+    /* COMPACT CARDS GRID */
+    .disciplines-wrapper {
+      max-width: 1180px;
+      margin: 8px auto 36px;
+      padding: 0 20px;
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    /* COMPACT MINIMALIST CARD */
+    .discipline-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      padding: 18px 20px;
+      gap: 12px;
+    }
+
+    .discipline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--border-hover);
+    }
+
+    .card-header-compact {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-main);
+    }
+
+    .card-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .badge-ready {
+      background: var(--topo-bg);
+      color: var(--topo-color);
+      border: 1px solid var(--topo-border);
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .card-footer-compact {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .card-meta b {
+      color: var(--text-main);
+    }
+
+    .btn-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+    }
+
+    /* THEMED CARDS */
+    /* IT */
+    .card-it .card-icon-box {
+      background: var(--it-bg);
+      border: 1px solid var(--it-border);
+      color: var(--it-color);
+    }
+
+    .card-it .btn-card {
+      background: var(--it-color);
+      color: #ffffff;
+    }
+
+    [data-theme="tokyo-dark"] .card-it .btn-card {
+      color: #1a1b26;
+      font-weight: 700;
+    }
+
+    .card-it .btn-card:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* TOPO */
+    .card-topo .card-icon-box {
+      background: var(--topo-bg);
+      border: 1px solid var(--topo-border);
+      color: var(--topo-color);
+    }
+
+    .card-topo .btn-card {
+      background: var(--topo-color);
+      color: #ffffff;
+    }
+
+    [data-theme="tokyo-dark"] .card-topo .btn-card {
+      color: #1a1b26;
+      font-weight: 700;
+    }
+
+    .card-topo .btn-card:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* AQUA */
+    .card-aqua .card-icon-box {
+      background: var(--aqua-bg);
+      border: 1px solid var(--aqua-border);
+      color: var(--aqua-color);
+    }
+
+    .card-aqua .btn-card {
+      background: var(--aqua-color);
+      color: #ffffff;
+    }
+
+    [data-theme="tokyo-dark"] .card-aqua .btn-card {
+      color: #1a1b26;
+      font-weight: 700;
+    }
+
+    .card-aqua .btn-card:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* CARTO */
+    .card-carto .card-icon-box {
+      background: var(--carto-bg);
+      border: 1px solid var(--carto-border);
+      color: var(--carto-color);
+    }
+
+    .card-carto .btn-card {
+      background: var(--carto-color);
+      color: #ffffff;
+    }
+
+    [data-theme="tokyo-dark"] .card-carto .btn-card {
+      color: #1a1b26;
+      font-weight: 700;
+    }
+
+    .card-carto .btn-card:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* COMPACT FEATURES */
+    .features-section {
+      max-width: 1180px;
+      margin: 0 auto 32px;
+      padding: 0 20px;
+      width: 100%;
+    }
+
+    .features-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .feature-item h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-item p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--bg-surface);
+      padding: 20px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-top: auto;
+    }
+
+    footer p {
+      margin-bottom: 2px;
+    }
+
+    @media(max-width: 768px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar-container {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .nav-actions {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="logo-brand">
+        <div class="logo-icon">🏛️</div>
+        <div>
+          <div class="logo-title">PolyTech Hub</div>
+          <div class="logo-subtitle">Portail Académique d'Examens</div>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <div class="nav-links">
+          <a href="info-tech.html" class="nav-pill">💻 Informatique & Data</a>
+          <a href="topo-geometrie.html" class="nav-pill">📐 Topo & Géométrie</a>
+          <a href="marine-aquaculture.html" class="nav-pill">🌊 Marine Aquaculture</a>
+        </div>
+        <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Basculer entre Mode Clair et Bleu-Tokyo">
+          🌙 Bleu-Tokyo
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTROLS -->
+  <div class="controls-container">
+    <div class="search-bar-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input"
+        placeholder="Rechercher une notion, formule, méthode ou technologie..." oninput="filterCards()">
+    </div>
+    <div class="filter-pills">
+      <button class="filter-btn active" onclick="setCategory('all', this)">Tous les Domaines</button>
+      <button class="filter-btn" onclick="setCategory('it', this)">💻 Informatique & Data</button>
+      <button class="filter-btn" onclick="setCategory('topo-geo', this)">📐 Topo & Géomatique</button>
+      <button class="filter-btn" onclick="setCategory('aqua', this)">🌊 Marine Aquaculture</button>
+      <button class="filter-btn" onclick="setCategory('carto', this)">🛰️ Carto & Télédétection</button>
+    </div>
+  </div>
+
+  <!-- CARDS SECTION -->
+  <main class="disciplines-wrapper">
+    <div class="cards-grid" id="cardsGrid">
+
+      <!-- 1. IT -->
+      <div class="discipline-card card-it" data-category="it"
+        data-keywords="informatique it data science big python sql talend etl machine learning ia ai spark hadoop bi cloud docker kubernetes powerbi tableau">
+        <div class="card-header-compact">
+          <div class="card-title-group">
+            <div class="card-icon-box">💻</div>
+            <h3 class="card-title">Informatique, Data & IA</h3>
+          </div>
+          <span class="card-badge badge-ready">🟢 11 Feuilles</span>
+        </div>
+        <p class="card-desc">Banque exhaustive : Data Science, Big Data, ingénierie ETL Talend, Machine Learning, Cloud et SQL avancé.</p>
+        <div class="card-footer-compact">
+          <div class="card-meta"><b>11 Feuilles</b> · 1 760 QCM</div>
+          <a href="info-tech.html" class="btn-card">Accéder à l'IT →</a>
+        </div>
+      </div>
+
+      <!-- 2. TOPOGRAPHIE, GEODESIE, CARTOGRAPHIE & TELEDETECTION -->
+      <div class="discipline-card card-topo" data-category="topo-geo"
+        data-keywords="topographie geodesie geometrie trigonometrie al-kashi sig topo nivellement polygonation tacheometrie gnss gps rtk qgis arcgis mnt photogrammetrie lidar bowditch pothenot hansen triangles matrices transformations girard cartographie teledetection satellites sentinel landsat ndvi sar insar drone">
+        <div class="card-header-compact">
+          <div class="card-title-group">
+            <div class="card-icon-box">📐</div>
+            <h3 class="card-title">Topographie, Géodésie & Carto</h3>
+          </div>
+          <span class="card-badge badge-ready">🟢 5 Feuilles</span>
+        </div>
+        <p class="card-desc">Discipline unifiée : Topométrie, Al-Kashi, GNSS/RTK, Projections Lambert/UTM, SIG PostGIS, Sentinel & LiDAR 3D.</p>
+        <div class="card-footer-compact">
+          <div class="card-meta"><b>5 Feuilles</b> · 800 QCM</div>
+          <a href="topo-geometrie.html" class="btn-card">Accéder à Topo-Carto →</a>
+        </div>
+      </div>
+
+      <!-- 3. MARINE AQUACULTURE -->
+      <div class="discipline-card card-aqua" data-category="aqua"
+        data-keywords="aquaculture marine halieutique poissons bar daurade saumon crevettes biologie ecophysiologie qualite eau o2 salinite ph ammoniac nitrites ras recirculation mbbr biofiltre degazage ozonation uv cages pehd amarrages offshore depomod nutrition alimentation fcr ecloserie reproduction rotiferes artemia microalgues pathologie vibriose nodavirose vaccins biosecurite imta asc bio durabilite">
+        <div class="card-header-compact">
+          <div class="card-title-group">
+            <div class="card-icon-box">🌊</div>
+            <h3 class="card-title">Aquaculture Marine & Halieutique</h3>
+          </div>
+          <span class="card-badge badge-ready">🟢 5 Feuilles</span>
+        </div>
+        <p class="card-desc">Mariculture complète : Qualité de l'eau, circuits recirculés (RAS), cages PEHD, bioénergétique, écloserie & IMTA.</p>
+        <div class="card-footer-compact">
+          <div class="card-meta"><b>5 Feuilles</b> · 800 QCM</div>
+          <a href="marine-aquaculture.html" class="btn-card">Accéder à l'Aquaculture →</a>
+        </div>
+      </div>
+
+      <!-- 4. CARTOGRAPHIE & TELEDETECTION (DIRECT ACCESS) -->
+      <div class="discipline-card card-carto" data-category="carto"
+        data-keywords="cartographie teledetection satellites sentinel landsat ndvi lidar projections utm lambert raster vecteur geomatique imagerie sar insar drone">
+        <div class="card-header-compact">
+          <div class="card-title-group">
+            <div class="card-icon-box">🛰️</div>
+            <h3 class="card-title">Cartographie & Télédétection</h3>
+          </div>
+          <span class="card-badge badge-ready">🟢 Intégré Topo</span>
+        </div>
+        <p class="card-desc">Projections conformes (Lambert 93, UTM), SIG QGIS/PostGIS, imagerie Sentinel, indices NDVI, Radar SAR et LiDAR.</p>
+        <div class="card-footer-compact">
+          <div class="card-meta"><b>Feuilles 4 & 5</b> · 320 QCM</div>
+          <a href="topo-geometrie.html" class="btn-card">Feuilles Carto →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FEATURES SECTION -->
+  <section class="features-section">
+    <div class="features-card">
+      <div class="feature-item">
+        <h3><span>🎯</span> Protocole 40/40/40/40</h3>
+        <p>4 niveaux progressifs par feuille (Fondamentaux, Application, Intermédiaire, Expertise).</p>
+      </div>
+      <div class="feature-item">
+        <h3><span>📝</span> Notation Instantanée</h3>
+        <p>Correction en direct avec calcul de note sur 20 et statut de validation.</p>
+      </div>
+      <div class="feature-item">
+        <h3><span>💡</span> Justifications Détaillées</h3>
+        <p>Toutes les 3 360 questions disposent d'une solution argumentée pas à pas.</p>
+      </div>
+      <div class="feature-item">
+        <h3><span>🌐</span> 100% Autonome & Léger</h3>
+        <p>Fonctionne directement dans votre navigateur web sans dépendance externe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© PolyTech Hub — Plateforme d'Examens QCM Multidisciplinaires.</p>
+    <p>Developed with <span style="color:#ef4444;">❤️</span> by El Mehdi AIT AZARINE</p>
+  </footer>
+
+  <script>
+    let currentCategory = 'all';
+
+    function updateThemeBtn() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) {
+        if (current === 'tokyo-dark') {
+          btn.innerHTML = '☀️ Mode Clair';
+        } else {
+          btn.innerHTML = '🌙 Bleu-Tokyo';
+        }
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'tokyo-dark' ? 'light' : 'tokyo-dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('polytech_theme', next);
+      updateThemeBtn();
+    }
+
+    // Mettre à jour le texte du bouton au chargement
+    document.addEventListener('DOMContentLoaded', updateThemeBtn);
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterCards();
+    }
+
+    function filterCards() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.discipline-card');
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const kw = (card.getAttribute('data-keywords') || '').toLowerCase();
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+
+        const matchesCat = (currentCategory === 'all' || cat === currentCategory);
+        const matchesSearch = (q === '' || kw.includes(q) || title.includes(q) || desc.includes(q));
+
+        if (matchesCat && matchesSearch) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
