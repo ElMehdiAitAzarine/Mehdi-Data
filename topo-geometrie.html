@@ -1408,7 +1408,11 @@ function startExam() {
 
   // Déverrouiller visuellement les questions
   const sheetContainer = document.getElementById('sheets');
-  if (sheetContainer) sheetContainer.classList.remove('locked-quiz');
+  if (sheetContainer) {
+    sheetContainer.classList.remove('locked-quiz');
+    const radios = sheetContainer.querySelectorAll('input[type="radio"]');
+    radios.forEach(r => r.disabled = false);
+  }
 
   // Mettre à jour l'en-tête du chronomètre
   const lockBanner = document.getElementById('examLockBanner');
